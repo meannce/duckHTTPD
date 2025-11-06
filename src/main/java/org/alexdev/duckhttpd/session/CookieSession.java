@@ -67,6 +67,7 @@ public class CookieSession {
         }
 
         return null;
+        }
     }
 
     public String getFingerprint() {
