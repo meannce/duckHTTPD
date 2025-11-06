@@ -59,15 +59,14 @@ public class CookieSession {
     public File getSessionFile() {
         if (!Settings.getInstance().isSaveSessions() || this.fingerprint == null) {
             return null;
+        }
 
         try {
             return Paths.get(CookieSessionManager.getInstance().getSessionDirectory().getCanonicalPath(), fingerprint).toFile();
         } catch (IOException ignored) {
-
         }
 
         return null;
-        }
     }
 
     public String getFingerprint() {
