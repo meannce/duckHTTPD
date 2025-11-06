@@ -63,6 +63,20 @@ public class WebConnection {
 
     public void validateSession() {
         this.sessionId = CookieSessionManager.getInstance().getSession(this);
+
+        if (this.sessionId == null) {
+        System.err.println("Error: Session ID is null for connection from " + this.getIpAddress());
+        return;
+        }
+
+        String fingerprint = this.sessionId.getFingerprint();
+
+        if (fingerprint != null) {
+            this.cookies().set(CookieSessionManager.HTTPSESSID, fingerprint);
+        } else {
+            System.err.println("Warning: Null fingerprint for session ID. Skipping cookie set.");
+        }
+
         this.cookies().set(CookieSessionManager.HTTPSESSID, this.sessionId.getFingerprint());
 
         this.session = this.sessionId.getWebSession();
