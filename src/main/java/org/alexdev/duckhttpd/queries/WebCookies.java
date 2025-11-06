@@ -68,7 +68,7 @@ public class WebCookies {
 
     public Cookie set(String name, String value, long age, TimeUnit unit) {
 
-        if (value == Null) {
+        if (value == null) {
           System.err.println("Warning: Attempting to set cookie '" + name + "' with null value. Skipping.");
           return null;
         }
