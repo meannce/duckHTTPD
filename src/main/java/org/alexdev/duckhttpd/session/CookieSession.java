@@ -22,6 +22,25 @@ public class CookieSession {
     public CookieSession(WebConnection client) {
         this.client = client;
         this.webSession = new WebSession(this.client);
+        String cookieString = client.request().headers().get(HttpHeaderNames.COOKIE);
+        String existingId = null;
+
+        if (cookieString != null && !cookieString.isEmpty()) {
+            Set<Cookie> cookies = ServerCookieDecoder.LAX.decode(cookieString);
+            for (Cookie c : cookies) {
+                if (c.name().equals("HTTPSESSID")) {
+                    existingId = c.value();
+                    break;
+                }
+            }
+        }
+
+        if (existingId != null && !existingId.isEmpty()) {
+            this.fingerprint = existingId;
+        } else {
+            this.generateFingerprint();  // Generate new for fresh sessions
+        }
+
         this.generateExpireTime();
     }
 
@@ -38,7 +57,7 @@ public class CookieSession {
     }
 
     public File getSessionFile() {
-        if (!Settings.getInstance().isSaveSessions())
+        if (!Settings.getInstance().isSaveSessions() || this.fingerprint == null) {
             return null;
 
         try {
