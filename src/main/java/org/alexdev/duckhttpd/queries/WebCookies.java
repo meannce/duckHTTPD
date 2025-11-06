@@ -67,6 +67,12 @@ public class WebCookies {
     }
 
     public Cookie set(String name, String value, long age, TimeUnit unit) {
+
+        if (value == Null) {
+          System.err.println("Warning: Attempting to set cookie '" + name + "' with null value. Skipping.");
+          return null;
+        }
+
         Cookie cookie = new DefaultCookie(name, value);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
